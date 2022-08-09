@@ -21,11 +21,11 @@ const ConfigureMetrics = () => {
     apiClient
       .get('/AllMetricDefinitions')
       .then(function (response) {
-        setMetricDefinitions(response.data)
-        console.log(response.data)
+        const responseData = response.data
+        setMetricDefinitions(responseData.data)
       })
       .catch(function (error) {
-        // handle error
+        console.log(error)
         throw error
       })
 
@@ -42,7 +42,6 @@ const ConfigureMetrics = () => {
       .post('/AddMetricDefinition', postData)
       .then(function (response) {
         setMetricName('')
-        console.log(response)
       })
       .catch(function (error) {
         console.log(error)
