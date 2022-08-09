@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import LineChart from '../component/LineChart'
+import MultiLineChart from '../component/MultiLineChart'
 
 function Dashboard () {
-  const [metricsPerMinute, setMetricsPerMinute] = useState([])
-  const [metricsPerHour, setMetricsPerHour] = useState([])
-  const [metricsPerDay, setMetricsPerDay] = useState([])
+  const [categoriesPerMinute, setCategoriesPerMinute] = useState([])
+  const [categoriesPerHour, setMetricsPerHour] = useState([])
+  const [categoriesPerDay, setCategoriesPerDay] = useState([])
+  const [dataSetPerDay, setDataSetPerDay] = useState([])
+  const [dataSetPerMinute, setDataSetPerMinute] = useState([])
+  const [dataSetPerHour, setDataSetPerHour] = useState([])
 
   const baseURL = 'https://localhost:7130/api/Metrics'
   const apiClient = axios.create({
@@ -23,30 +26,42 @@ function Dashboard () {
       .get('/GetMetricAverages')
       .then(function (response) {
         const responseData = response.data
-        const perMinute = responseData.data.perMinute
-          .filter((metric) => metric.name === 'Calls')
-          .map((metric) => ({
-            label: metric.monthDay,
-            value: metric.value,
-            name: metric.name
-          }))
-        const perHour = responseData.data.perHour
-          .filter((metric) => metric.name === 'Calls')
-          .map((metric) => ({
-            label: metric.monthDay,
-            value: metric.value,
-            name: metric.name
-          }))
-        const perDay = responseData.data.perDay
-          .filter((metric) => metric.name === 'Calls')
-          .map((metric) => ({
-            label: metric.monthString,
-            value: metric.value,
-            name: metric.name
-          }))
-        setMetricsPerMinute(perMinute)
+        const monthDays = [...new Set(responseData.data.perHour.map(item => item.monthDay))]
+
+        const perMinute = monthDays.map((day) => ({ label: day }))
+        const perHour = monthDays.map((day) => ({ label: day }))
+
+        const months = [...new Set(responseData.data.perDay.map(item => item.monthString))]
+        const perDay = months.map((month) => ({ label: month }))
+
+        setCategoriesPerDay(perDay)
+        setCategoriesPerMinute(perMinute)
         setMetricsPerHour(perHour)
-        setMetricsPerDay(perDay)
+
+        const metricCategories = [...new Set(responseData.data.perDay.map(item => item.name))]
+        const datasetMinute = metricCategories
+          .map((metric) => ({
+            seriesname: metric,
+            data: responseData.data.perHour.filter((m) => m.name === metric)
+              .map((m) => ({ value: m.value }))
+          }))
+        setDataSetPerMinute(datasetMinute)
+
+        const datasetHour = metricCategories
+          .map((metric) => ({
+            seriesname: metric,
+            data: responseData.data.perHour.filter((m) => m.name === metric)
+              .map((m) => ({ value: m.value }))
+          }))
+        setDataSetPerHour(datasetHour)
+
+        const datasetDay = metricCategories
+          .map((metric) => ({
+            seriesname: metric,
+            data: responseData.data.perDay.filter((m) => m.name === metric)
+              .map((m) => ({ value: m.value }))
+          }))
+        setDataSetPerDay(datasetDay)
       })
       .catch(function (error) {
         console.log(error)
@@ -58,11 +73,14 @@ function Dashboard () {
 
   const chartDay = {
     caption: 'Average Metric Values Per Day', // Set the chart caption
-    subCaption: '', // Set the chart subcaption
+    subcaption: '', // Set the chart subcaption
     xAxisName: 'Month', // Set the x-axis name
     yaxisname: 'Values', // Set the y-axis name
     numberSuffix: '',
-    theme: 'fusion' // Set the theme for your chart
+    theme: 'fusion', // Set the theme for your chart
+    showhovereffect: '1',
+    drawcrossline: '1',
+    plottooltext: '<b>$dataValue</b> metric value for $seriesName'
   }
 
   const chartHour = {
@@ -85,11 +103,11 @@ function Dashboard () {
 
   return (
     <div className="container">
-      <LineChart chart={chartDay} data={metricsPerDay}/>
+      <MultiLineChart categories={categoriesPerDay} dataset={dataSetPerDay} chart={chartDay}/>
       <br/>
-      <LineChart chart={chartHour} data={metricsPerHour}/>
+      <MultiLineChart categories={categoriesPerHour} dataset={dataSetPerHour} chart={chartHour}/>
       <br/>
-      <LineChart chart={chartMinute} data={metricsPerMinute}/>
+      <MultiLineChart categories={categoriesPerMinute} dataset={dataSetPerMinute} chart={chartMinute}/>
     </div>
   )
 }
