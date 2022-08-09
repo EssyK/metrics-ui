@@ -72,19 +72,18 @@ function Dashboard () {
   }, [])
 
   const chartDay = {
-    caption: 'Average Metric Values Per Day', // Set the chart caption
+    caption: 'Metric Values Per Day', // Set the chart caption
     subcaption: '', // Set the chart subcaption
     xAxisName: 'Month', // Set the x-axis name
     yaxisname: 'Values', // Set the y-axis name
     numberSuffix: '',
     theme: 'fusion', // Set the theme for your chart
     showhovereffect: '1',
-    drawcrossline: '1',
-    plottooltext: '<b>$dataValue</b> metric value for $seriesName'
+    drawcrossline: '1'
   }
 
   const chartHour = {
-    caption: 'Average Metric Values Per Hour', // Set the chart caption
+    caption: 'Metric Values Per Hour', // Set the chart caption
     subCaption: '', // Set the chart subcaption
     xAxisName: 'Days', // Set the x-axis name
     yaxisname: 'Values', // Set the y-axis name
@@ -93,7 +92,7 @@ function Dashboard () {
   }
 
   const chartMinute = {
-    caption: 'Average Metric Values Per Minute', // Set the chart caption
+    caption: 'Metric Values Per Minute', // Set the chart caption
     subCaption: '', // Set the chart subcaption
     xAxisName: 'Days', // Set the x-axis name
     yaxisname: 'Values', // Set the y-axis name
