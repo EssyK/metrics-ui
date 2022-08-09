@@ -22,22 +22,22 @@ function Dashboard () {
     apiClient
       .get('/GetMetricAverages')
       .then(function (response) {
-        console.log(response.data)
-        const perMinute = response.data.perMinute
+        const responseData = response.data
+        const perMinute = responseData.data.perMinute
           .filter((metric) => metric.name === 'Calls')
           .map((metric) => ({
             label: metric.monthDay,
             value: metric.value,
             name: metric.name
           }))
-        const perHour = response.data.perHour
+        const perHour = responseData.data.perHour
           .filter((metric) => metric.name === 'Calls')
           .map((metric) => ({
             label: metric.monthDay,
             value: metric.value,
             name: metric.name
           }))
-        const perDay = response.data.perDay
+        const perDay = responseData.data.perDay
           .filter((metric) => metric.name === 'Calls')
           .map((metric) => ({
             label: metric.monthString,
@@ -49,7 +49,7 @@ function Dashboard () {
         setMetricsPerDay(perDay)
       })
       .catch(function (error) {
-        // handle error
+        console.log(error)
         throw error
       })
 
