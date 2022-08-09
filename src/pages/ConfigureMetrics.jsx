@@ -6,7 +6,7 @@ const ConfigureMetrics = () => {
   const [metricValue, setMetricValue] = useState('')
   const [metricId, setMetricId] = useState('')
   const [metricDefinitions, setMetricDefinitions] = useState([])
-  const baseURL = 'https://localhost:7130/api/Metrics'
+  const baseURL = process.env.REACT_APP_BASE_URL
   const apiClient = axios.create({
     baseURL: `${baseURL}`,
     withCredentials: false,
