@@ -2,6 +2,9 @@
 
 UI developed in React that enables a user to create a metric and visualize it in a line graph.
 
+## How to Access the App
+1. You can directly access the web app here, [Metrics UI](https://metrics-visualization.netlify.app/)
+
 ## How to Run the App
 
 1. Clone and start the [Metrics API](https://github.com/EssyK/Metrics)
