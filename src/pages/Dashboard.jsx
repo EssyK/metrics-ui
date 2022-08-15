@@ -42,7 +42,7 @@ function Dashboard () {
         const datasetMinute = metricCategories
           .map((metric) => ({
             seriesname: metric,
-            data: responseData.data.perHour.filter((m) => m.name === metric)
+            data: responseData.data.perMinute.filter((m) => m.name === metric)
               .map((m) => ({ value: m.value }))
           }))
         setDataSetPerMinute(datasetMinute)
